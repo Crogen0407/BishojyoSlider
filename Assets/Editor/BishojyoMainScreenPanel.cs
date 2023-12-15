@@ -47,11 +47,11 @@ namespace Editor
             {
                 if (e.delta.y < 0)
                 {
-                    _mulSize += 0.1f;
+                    _mulSize += 0.1f * Time.deltaTime;
                 }
                 else
                 {
-                    _mulSize -= 0.1f;
+                    _mulSize -= 0.1f * Time.deltaTime;
                 }
             }
             _screenSize = new Vector2(aa, aa * BishojyoEditorData.percentY) * 1.5f * _mulSize;
