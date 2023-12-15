@@ -29,7 +29,6 @@ namespace Editor
 
             float mm = 50;
             float aa = position.width > position.height ? position.height - mm  : position.width - mm;
-            _screenSize = new Vector2(aa, aa * BishojyoEditorData.percentY) * 1.5f * _mulSize;
             
             windowRect = new Rect(
                 new Vector2(
@@ -43,13 +42,20 @@ namespace Editor
             }
             GUILayout.EndArea();
             
-            _mulSize = GUI.VerticalSlider(new Rect(Vector2.zero, new Vector2(1, position.height)), _mulSize, 3, 0.2f);
-            _mulSize += Input.GetAxis("Mouse ScrollWheel");
             Event e = Event.current;
             if (e.isScrollWheel)
             {
-                _mulSize += 0.1f;
+                if (e.delta.y < 0)
+                {
+                    _mulSize += 0.1f;
+                }
+                else
+                {
+                    _mulSize -= 0.1f;
+                }
             }
+            _screenSize = new Vector2(aa, aa * BishojyoEditorData.percentY) * 1.5f * _mulSize;
+            _mulSize = Mathf.Clamp(_mulSize,0.2f, 3);
             GUILayout.TextField(_mulSize.ToString(), 3);
             // myString = EditorGUILayout.TextField ("Text Field", myString);
             //
