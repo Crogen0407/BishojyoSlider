@@ -23,6 +23,7 @@ namespace Editor
         float _sliderValue = 0;
         private float _sliderCount = 10;
         private float _mulSize = 0.7f;
+        
         private void OnGUI()
         {
             float gap = 25;
@@ -55,7 +56,7 @@ namespace Editor
                 }
             }
             _screenSize = new Vector2(aa, aa * BishojyoEditorData.percentY) * 1.5f * _mulSize;
-            _mulSize = Mathf.Clamp(_mulSize,0.2f, 3);
+            _mulSize = Mathf.Clamp(_mulSize, 0.2f, 3);
             GUILayout.TextField(_mulSize.ToString(), 3);
             // myString = EditorGUILayout.TextField ("Text Field", myString);
             //
