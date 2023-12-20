@@ -10,7 +10,6 @@ namespace Editor
         private Rect windowRect;
         private Vector2 _screenSize = new Vector2(1920, 1080);
         private EditorWindow _window;
-        
         [MenuItem("BishojyoSlider/OpenSliderPanel")]
         private static void ShowWindow()
         {
@@ -39,7 +38,7 @@ namespace Editor
             
             GUILayout.BeginArea(windowRect, GUI.skin.window);
             {
-                
+                GUILayout.TextArea(BishojyoEditorData.activePanelIndex.ToString(), GUIStyle.none);
             }
             GUILayout.EndArea();
             
@@ -64,7 +63,7 @@ namespace Editor
             // myBool = EditorGUILayout.Toggle ("Toggle", myBool);
             // myFloat = EditorGUILayout.Slider ("Slider", myFloat, -3, 3);
             // EditorGUILayout.EndToggleGroup ();
-
+            Repaint();
         }
         
         void DoMyWindow(int windowID)

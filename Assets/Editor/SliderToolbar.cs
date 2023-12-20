@@ -11,6 +11,7 @@ namespace Editor
             var window = GetWindow<SliderToolbar>();
             window.titleContent = new GUIContent("SliderToolbar");
             window.Show();
+            BishojyoEditorData.Init();
         }
 
         private void OnGUI()
@@ -21,19 +22,23 @@ namespace Editor
             
             //Toolbar
             Vector2 panelSize = new Vector2(windowSize.y * BishojyoEditorData.percentX - gap * 5, windowSize.y - gap * 5);
-            Vector2 panelPos = new Vector2((windowSize.y * BishojyoEditorData.percentX - gap * 4), 0);
-            BishojyoEditorData.sliderValue = GUI.HorizontalScrollbar(new Rect(0, panelSize.y, position.width - gap * 2, 10), BishojyoEditorData.sliderValue, 0.2f, 0, 1);
-            
-            for (int i = 0; i < BishojyoEditorData.sliderCount; i++)
+            Vector2 panelPos = new Vector2((windowSize.y * BishojyoEditorData.percentX - gap * 4), 0.5f);
+            BishojyoEditorData.SliderValue = GUI.HorizontalScrollbar(new Rect(0, panelSize.y, position.width - gap * 2, 10), BishojyoEditorData.SliderValue, 0.2f, 0, BishojyoEditorData.SliderCount * panelSize.x / BishojyoEditorData.percentX);
+
+            for (int i = 0; i < BishojyoEditorData.SliderCount; i++)
             {
                 GUILayout.BeginHorizontal();
-                GUI.Button(
-                    new Rect(   
-                        panelPos.x * i - BishojyoEditorData.sliderCount * windowSize.x, 
-                        panelPos.y,
-                        panelSize.x,
-                        panelSize.y),
-                    (i+1).ToString());
+                if (GUI.Button(
+                        new Rect(
+                            panelPos.x * i - BishojyoEditorData.SliderValue,
+                            panelPos.y,
+                            panelSize.x,
+                            panelSize.y),
+                        i.ToString()))
+                {
+                    BishojyoEditorData.activePanelIndex = i;
+                    Repaint();
+                }
                 GUILayout.EndHorizontal();
             }
         }
