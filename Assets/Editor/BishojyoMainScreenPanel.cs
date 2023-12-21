@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Editor
 {
@@ -22,7 +23,8 @@ namespace Editor
         float _sliderValue = 0;
         private float _sliderCount = 10;
         private float _mulSize = 0.7f;
-        
+
+        private float _currentActivePanelIndex;
         private void OnGUI()
         {
             float gap = 25;
@@ -38,6 +40,10 @@ namespace Editor
             
             GUILayout.BeginArea(windowRect, GUI.skin.window);
             {
+                if (_currentActivePanelIndex != BishojyoEditorData.activePanelIndex)
+                {
+                    
+                }
                 GUILayout.TextArea(BishojyoEditorData.activePanelIndex.ToString(), GUIStyle.none);
             }
             GUILayout.EndArea();
@@ -47,11 +53,11 @@ namespace Editor
             {
                 if (e.delta.y < 0)
                 {
-                    _mulSize += 0.1f * Time.deltaTime;
+                    _mulSize += 0.2f * Time.deltaTime;
                 }
                 else
                 {
-                    _mulSize -= 0.1f * Time.deltaTime;
+                    _mulSize -= 0.2f * Time.deltaTime;
                 }
             }
             _screenSize = new Vector2(aa, aa * BishojyoEditorData.percentY) * 1.5f * _mulSize;
@@ -63,6 +69,8 @@ namespace Editor
             // myBool = EditorGUILayout.Toggle ("Toggle", myBool);
             // myFloat = EditorGUILayout.Slider ("Slider", myFloat, -3, 3);
             // EditorGUILayout.EndToggleGroup ();
+            
+            _currentActivePanelIndex = BishojyoEditorData.activePanelIndex;
             Repaint();
         }
         
