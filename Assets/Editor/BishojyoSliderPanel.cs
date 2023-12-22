@@ -11,6 +11,10 @@ namespace Editor
         private Rect windowRect;
         private Vector2 _screenSize = new Vector2(1920, 1080);
         private EditorWindow _window;
+        
+        EditorGUISplitView horizontalSplitView = new EditorGUISplitView (EditorGUISplitView.Direction.Horizontal);
+        EditorGUISplitView verticalSplitView = new EditorGUISplitView (EditorGUISplitView.Direction.Vertical);
+        
         [MenuItem("BishojyoSlider/BishojyoSliderPanel")]
         private static void ShowWindow()
         {
@@ -38,7 +42,9 @@ namespace Editor
             float mm = 50;
             float aa = position.width > position.height ? position.height - mm  : position.width - mm;
             Vector2 windowSize = new Vector2(position.width, position.height);
-
+            _currentActivePanelIndex = BishojyoEditorData.activePanelIndex;
+                
+            verticalSplitView.BeginSplitView ();
             #region MainScreen
             
                 windowRect = new Rect(
@@ -46,17 +52,16 @@ namespace Editor
                         (position.width - _screenSize.x) / 2,
                         (position.height - _screenSize.y) / 2), 
                     _screenSize);
-                
                 GUILayout.BeginArea(windowRect, GUI.skin.window);
                 {
                     if (_currentActivePanelIndex != BishojyoEditorData.activePanelIndex)
                     {
-                        
+                            
                     }
                     GUILayout.TextArea(BishojyoEditorData.activePanelIndex.ToString(), GUIStyle.none);
                 }
                 GUILayout.EndArea();
-                
+                    
                 Event e = Event.current;
                 if (e.isScrollWheel)
                 {
@@ -80,14 +85,13 @@ namespace Editor
                 // EditorGUILayout.EndToggleGroup ();
                 
             #endregion
-            
-            _currentActivePanelIndex = BishojyoEditorData.activePanelIndex;
-
+            verticalSplitView.Split ();
+            verticalSplitView.EndSplitView ();
             #region UnderToolbar
             
                 GUILayout.BeginArea(new Rect(new Vector2(0,position.height / 2), new Vector2(position.width, position.height)));
                 Rect toolBarRect = new Rect(new Vector2(0, windowSize.y + gap), windowSize);
-                
+                    
                 //Toolbar
                 Vector2 panelSize = new Vector2(windowSize.y * BishojyoEditorData.percentX - gap * 5, windowSize.y - gap * 5);
                 Vector2 panelPos = new Vector2((windowSize.y * BishojyoEditorData.percentX - gap * 4), 0.5f);
@@ -96,7 +100,7 @@ namespace Editor
                         new Rect(0, panelSize.y, position.width - gap * 2, 10),
                         BishojyoEditorData.SliderValue, 
                         200f, 0, BishojyoEditorData.SliderCount * panelSize.x / BishojyoEditorData.percentX);
-                
+                    
                 for (int i = 0; i < BishojyoEditorData.SliderCount; i++)
                 {
                     GUILayout.BeginHorizontal();
@@ -116,8 +120,8 @@ namespace Editor
             
             #endregion
             Repaint();
+            
+            Repaint();
         }
-	
-       
     }
 }
