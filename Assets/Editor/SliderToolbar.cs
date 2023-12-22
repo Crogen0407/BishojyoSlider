@@ -11,12 +11,10 @@ namespace Editor
             var window = GetWindow<SliderToolbar>();
             window.titleContent = new GUIContent("SliderToolbar");
             window.Show();
-            BishojyoEditorData.Init();
         }
 
         private void OnGUI()
         {
-            BishojyoEditorData.Init();
             Vector2 windowSize = new Vector2(position.width, position.height);
             float gap = BishojyoEditorData.gap;
             Rect toolBarRect = new Rect(new Vector2(0, windowSize.y + gap), windowSize);
