@@ -31,7 +31,7 @@ namespace Editor
         float currentScrollViewHeight;
         bool resize = false;
         Rect cursorChangeRect;
-        
+        private Vector2 timelineScrollVec;
         private void OnGUI()
         {
             BishojyoEditorData.Init();
@@ -100,36 +100,22 @@ namespace Editor
             {
                 #region UnderToolbar
             
-                //Toolbar
-                Vector2 panelSize = new Vector2(timelineRect.size.y * BishojyoEditorData.percentX - gap * 5, timelineRect.size.y - gap * 5);
-                Vector2 panelPos = new Vector2(0, timelineRect.position.y);
-                BishojyoEditorData.SliderValue = 
-                    GUI.HorizontalScrollbar(
-                        new Rect(0, timelineRect.size.y - gap, position.width - gap * 2, 10),
-                        BishojyoEditorData.SliderValue, 
-                        200f, 0, BishojyoEditorData.SliderCount * panelSize.x / BishojyoEditorData.percentX);
-                GUI.Button(
-                    new Rect(
-                        panelPos.x,
-                        panelPos.y,
-                        100,
-                        100), "");
-                for (int i = 0; i < BishojyoEditorData.SliderCount; i++)
+                Vector2 panelSize = new Vector2(timelineRect.size.y * BishojyoEditorData.percentX, timelineRect.size.y) * 0.7f;
+                timelineScrollVec = GUILayout.BeginScrollView(timelineScrollVec, true, false, GUILayout.Width(timelineRect.size.x));
                 {
                     GUILayout.BeginHorizontal();
-                    if (GUI.Button(
-                            new Rect(
-                                panelPos.x * i - BishojyoEditorData.SliderValue,
-                                panelPos.y,
-                                panelSize.x,
-                                panelSize.y),
-                            i.ToString()))
+
+                    for (int i = 0; i < BishojyoEditorData.SliderCount; i++)
                     {
-                        BishojyoEditorData.activePanelIndex = i;
+                        if (GUILayout.Button(i.ToString(), GUILayout.Width(panelSize.x), GUILayout.Height(panelSize.y)))
+                        {
+                            BishojyoEditorData.activePanelIndex = i;
+                        }
                     }
                     GUILayout.EndHorizontal();
                 }
-            
+                GUILayout.EndScrollView();
+
                 #endregion
             }
             GUILayout.EndArea();
