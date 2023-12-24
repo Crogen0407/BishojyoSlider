@@ -57,7 +57,11 @@ namespace Editor
             GUILayout.EndArea();
             GUILayout.BeginArea(new Rect(Vector2.right * (windowSize - sideWindowSize), new Vector2(sideWindowSize.x, mainScreenRect.size.y)), GUI.skin.window); //Hierarchy
             {
-                
+                GUILayout.BeginArea(new Rect(Vector2.zero, new Vector2(sideWindowSize.x, 25)), GUI.skin.box);
+                {
+                    GUI.TextField(new Rect(5, 0, 100, 20), "Hierarchy", GUI.skin.label);
+                }
+                GUILayout.EndArea();
             }
             GUILayout.EndArea();
             GUILayout.BeginArea(mainScreenRect, GUI.skin.window); //MainScreen
