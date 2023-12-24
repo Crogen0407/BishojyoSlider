@@ -43,6 +43,8 @@ namespace Editor
             Rect mainScreenRect = new Rect(Vector2.right * sideWindowSize.x,
                 new Vector2(windowSize.x - sideWindowSize.x * 2, windowSize.y * 0.7f));
             _currentActivePanelIndex = BishojyoEditorData.activePanelIndex;
+            Rect timelineRect = new Rect(new Vector2(0, windowSize.y * 0.7f),
+                new Vector2(windowSize.x, windowSize.y - windowSize.y * 0.7f));
             
             GUILayout.BeginArea(new Rect(Vector2.zero, new Vector2(sideWindowSize.x, mainScreenRect.size.y)), GUI.skin.window); //ProjectSetting
             {
@@ -94,43 +96,44 @@ namespace Editor
                 #endregion
             }
             GUILayout.EndArea();
-            GUILayout.BeginArea(new Rect(new Vector2(0, windowSize.y*0.7f), new Vector2(windowSize.x,  windowSize.y - windowSize.y*0.7f)), GUI.skin.window); //Timeline
+            GUILayout.BeginArea(timelineRect, GUI.skin.window); //Timeline
             {
-                
+                #region UnderToolbar
+            
+                //Toolbar
+                Vector2 panelSize = new Vector2(timelineRect.size.y * BishojyoEditorData.percentX - gap * 5, timelineRect.size.y - gap * 5);
+                Vector2 panelPos = new Vector2(0, timelineRect.position.y);
+                BishojyoEditorData.SliderValue = 
+                    GUI.HorizontalScrollbar(
+                        new Rect(0, timelineRect.size.y - gap, position.width - gap * 2, 10),
+                        BishojyoEditorData.SliderValue, 
+                        200f, 0, BishojyoEditorData.SliderCount * panelSize.x / BishojyoEditorData.percentX);
+                GUI.Button(
+                    new Rect(
+                        panelPos.x,
+                        panelPos.y,
+                        100,
+                        100), "");
+                for (int i = 0; i < BishojyoEditorData.SliderCount; i++)
+                {
+                    GUILayout.BeginHorizontal();
+                    if (GUI.Button(
+                            new Rect(
+                                panelPos.x * i - BishojyoEditorData.SliderValue,
+                                panelPos.y,
+                                panelSize.x,
+                                panelSize.y),
+                            i.ToString()))
+                    {
+                        BishojyoEditorData.activePanelIndex = i;
+                    }
+                    GUILayout.EndHorizontal();
+                }
+            
+                #endregion
             }
             GUILayout.EndArea();
-            // #region UnderToolbar
-            //
-            //     GUILayout.BeginArea(new Rect(new Vector2(0,position.height / 2), new Vector2(position.width, position.height)));
-            //     Rect toolBarRect = new Rect(new Vector2(0, windowSize.y + gap), windowSize);
-            //         
-            //     //Toolbar
-            //     Vector2 panelSize = new Vector2(windowSize.y * BishojyoEditorData.percentX - gap * 5, windowSize.y - gap * 5);
-            //     Vector2 panelPos = new Vector2((windowSize.y * BishojyoEditorData.percentX - gap * 4), 0.5f);
-            //     BishojyoEditorData.SliderValue = 
-            //         GUI.HorizontalScrollbar(
-            //             new Rect(0, panelSize.y, position.width - gap * 2, 10),
-            //             BishojyoEditorData.SliderValue, 
-            //             200f, 0, BishojyoEditorData.SliderCount * panelSize.x / BishojyoEditorData.percentX);
-            //         
-            //     for (int i = 0; i < BishojyoEditorData.SliderCount; i++)
-            //     {
-            //         GUILayout.BeginHorizontal();
-            //         if (GUI.Button(
-            //                 new Rect(
-            //                     panelPos.x * i - BishojyoEditorData.SliderValue,
-            //                     panelPos.y,
-            //                     panelSize.x,
-            //                     panelSize.y),
-            //                 i.ToString()))
-            //         {
-            //             BishojyoEditorData.activePanelIndex = i;
-            //         }
-            //         GUILayout.EndHorizontal();
-            //     }
-            //     GUILayout.EndArea();
-            //
-            // #endregion
+            
             Repaint();
         }
     }
