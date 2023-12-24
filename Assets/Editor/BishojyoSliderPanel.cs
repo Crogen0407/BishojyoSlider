@@ -1,8 +1,8 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
-using UnityEditor.UI;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using UnityEngine.UIElements;
 
 namespace Editor
 {
@@ -11,9 +11,6 @@ namespace Editor
         private Rect windowRect;
         private Vector2 _screenSize = new Vector2(1920, 1080);
         private EditorWindow _window;
-        
-        EditorGUISplitView horizontalSplitView = new EditorGUISplitView (EditorGUISplitView.Direction.Horizontal);
-        EditorGUISplitView verticalSplitView = new EditorGUISplitView (EditorGUISplitView.Direction.Vertical);
         
         [MenuItem("BishojyoSlider/BishojyoSliderPanel")]
         private static void ShowWindow()
@@ -42,15 +39,29 @@ namespace Editor
             float mm = 50;
             float aa = position.width > position.height ? position.height - mm  : position.width - mm;
             Vector2 windowSize = new Vector2(position.width, position.height);
+            Vector2 sideWindowSize = new Vector2(windowSize.x / 5, windowSize.y*0.7f);
+            Rect mainScreenRect = new Rect(Vector2.right * sideWindowSize.x,
+                new Vector2(windowSize.x - sideWindowSize.x * 2, windowSize.y * 0.7f));
             _currentActivePanelIndex = BishojyoEditorData.activePanelIndex;
+            
+            GUILayout.BeginArea(new Rect(Vector2.zero, new Vector2(sideWindowSize.x, mainScreenRect.size.y)), GUI.skin.window); //ProjectSetting
+            {
                 
-            verticalSplitView.BeginSplitView ();
-            #region MainScreen
+            }
+            GUILayout.EndArea();
+            GUILayout.BeginArea(new Rect(Vector2.right * (windowSize - sideWindowSize), new Vector2(sideWindowSize.x, mainScreenRect.size.y)), GUI.skin.window); //Hierarchy
+            {
+                
+            }
+            GUILayout.EndArea();
+            GUILayout.BeginArea(mainScreenRect, GUI.skin.window); //MainScreen
+            {
+                #region MainScreen
             
                 windowRect = new Rect(
                     new Vector2(
-                        (position.width - _screenSize.x) / 2,
-                        (position.height - _screenSize.y) / 2), 
+                        (mainScreenRect.size.x - _screenSize.x) / 2,
+                        (mainScreenRect.size.y - _screenSize.y) / 2), 
                     _screenSize);
                 GUILayout.BeginArea(windowRect, GUI.skin.window);
                 {
@@ -75,52 +86,51 @@ namespace Editor
                     }
                 }
                 _screenSize = new Vector2(aa, aa * BishojyoEditorData.percentY) * 1.5f * _mulSize;
+                GUI.TextField(new Rect(0, 0, 50, 20), "Scale", GUI.skin.label);
+                GUI.TextField(new Rect(mainScreenRect.size.x * 0.3f + 50, 0, 50, 20), _mulSize.ToString(), 4, GUI.skin.label);
+
+                _mulSize = GUI.HorizontalSlider(new Rect(40, 2.5f, mainScreenRect.size.x * 0.3f, 10), _mulSize, 0.2f, 3);
                 _mulSize = Mathf.Clamp(_mulSize, 0.2f, 3);
-                GUILayout.TextField(_mulSize.ToString(), 3);
-                // myString = EditorGUILayout.TextField ("Text Field", myString);
-                //
-                // groupEnabled = EditorGUILayout.BeginToggleGroup ("Optional Settings", groupEnabled);
-                // myBool = EditorGUILayout.Toggle ("Toggle", myBool);
-                // myFloat = EditorGUILayout.Slider ("Slider", myFloat, -3, 3);
-                // EditorGUILayout.EndToggleGroup ();
+                #endregion
+            }
+            GUILayout.EndArea();
+            GUILayout.BeginArea(new Rect(new Vector2(0, windowSize.y*0.7f), new Vector2(windowSize.x,  windowSize.y - windowSize.y*0.7f)), GUI.skin.window); //Timeline
+            {
                 
-            #endregion
-            verticalSplitView.Split ();
-            verticalSplitView.EndSplitView ();
-            #region UnderToolbar
-            
-                GUILayout.BeginArea(new Rect(new Vector2(0,position.height / 2), new Vector2(position.width, position.height)));
-                Rect toolBarRect = new Rect(new Vector2(0, windowSize.y + gap), windowSize);
-                    
-                //Toolbar
-                Vector2 panelSize = new Vector2(windowSize.y * BishojyoEditorData.percentX - gap * 5, windowSize.y - gap * 5);
-                Vector2 panelPos = new Vector2((windowSize.y * BishojyoEditorData.percentX - gap * 4), 0.5f);
-                BishojyoEditorData.SliderValue = 
-                    GUI.HorizontalScrollbar(
-                        new Rect(0, panelSize.y, position.width - gap * 2, 10),
-                        BishojyoEditorData.SliderValue, 
-                        200f, 0, BishojyoEditorData.SliderCount * panelSize.x / BishojyoEditorData.percentX);
-                    
-                for (int i = 0; i < BishojyoEditorData.SliderCount; i++)
-                {
-                    GUILayout.BeginHorizontal();
-                    if (GUI.Button(
-                            new Rect(
-                                panelPos.x * i - BishojyoEditorData.SliderValue,
-                                panelPos.y,
-                                panelSize.x,
-                                panelSize.y),
-                            i.ToString()))
-                    {
-                        BishojyoEditorData.activePanelIndex = i;
-                    }
-                    GUILayout.EndHorizontal();
-                }
-                GUILayout.EndArea();
-            
-            #endregion
-            Repaint();
-            
+            }
+            GUILayout.EndArea();
+            // #region UnderToolbar
+            //
+            //     GUILayout.BeginArea(new Rect(new Vector2(0,position.height / 2), new Vector2(position.width, position.height)));
+            //     Rect toolBarRect = new Rect(new Vector2(0, windowSize.y + gap), windowSize);
+            //         
+            //     //Toolbar
+            //     Vector2 panelSize = new Vector2(windowSize.y * BishojyoEditorData.percentX - gap * 5, windowSize.y - gap * 5);
+            //     Vector2 panelPos = new Vector2((windowSize.y * BishojyoEditorData.percentX - gap * 4), 0.5f);
+            //     BishojyoEditorData.SliderValue = 
+            //         GUI.HorizontalScrollbar(
+            //             new Rect(0, panelSize.y, position.width - gap * 2, 10),
+            //             BishojyoEditorData.SliderValue, 
+            //             200f, 0, BishojyoEditorData.SliderCount * panelSize.x / BishojyoEditorData.percentX);
+            //         
+            //     for (int i = 0; i < BishojyoEditorData.SliderCount; i++)
+            //     {
+            //         GUILayout.BeginHorizontal();
+            //         if (GUI.Button(
+            //                 new Rect(
+            //                     panelPos.x * i - BishojyoEditorData.SliderValue,
+            //                     panelPos.y,
+            //                     panelSize.x,
+            //                     panelSize.y),
+            //                 i.ToString()))
+            //         {
+            //             BishojyoEditorData.activePanelIndex = i;
+            //         }
+            //         GUILayout.EndHorizontal();
+            //     }
+            //     GUILayout.EndArea();
+            //
+            // #endregion
             Repaint();
         }
     }
