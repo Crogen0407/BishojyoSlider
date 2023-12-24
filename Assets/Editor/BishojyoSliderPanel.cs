@@ -48,7 +48,11 @@ namespace Editor
             
             GUILayout.BeginArea(new Rect(Vector2.zero, new Vector2(sideWindowSize.x, mainScreenRect.size.y)), GUI.skin.window); //ProjectSetting
             {
-                
+                GUILayout.BeginArea(new Rect(Vector2.zero, new Vector2(sideWindowSize.x, 25)), GUI.skin.box);
+                {
+                    GUI.TextField(new Rect(5, 0, 100, 20), "ProjectSetting", GUI.skin.label);
+                }
+                GUILayout.EndArea();
             }
             GUILayout.EndArea();
             GUILayout.BeginArea(new Rect(Vector2.right * (windowSize - sideWindowSize), new Vector2(sideWindowSize.x, mainScreenRect.size.y)), GUI.skin.window); //Hierarchy
@@ -88,10 +92,10 @@ namespace Editor
                     }
                 }
                 _screenSize = new Vector2(aa, aa * BishojyoEditorData.percentY) * 1.5f * _mulSize;
-                GUI.TextField(new Rect(0, 0, 50, 20), "Scale", GUI.skin.label);
-                GUI.TextField(new Rect(mainScreenRect.size.x * 0.3f + 50, 0, 50, 20), _mulSize.ToString(), 4, GUI.skin.label);
+                GUI.TextField(new Rect(5, 0, 50, 20), "Scale", GUI.skin.label);
+                GUI.TextField(new Rect(mainScreenRect.size.x * 0.3f + 55, 0, 50, 20), _mulSize.ToString(), 4, GUI.skin.label);
 
-                _mulSize = GUI.HorizontalSlider(new Rect(40, 2.5f, mainScreenRect.size.x * 0.3f, 10), _mulSize, 0.2f, 3);
+                _mulSize = GUI.HorizontalSlider(new Rect(45, 2.5f, mainScreenRect.size.x * 0.3f, 10), _mulSize, 0.2f, 3);
                 _mulSize = Mathf.Clamp(_mulSize, 0.2f, 3);
                 #endregion
             }
