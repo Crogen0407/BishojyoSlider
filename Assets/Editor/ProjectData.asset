@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8448704368d1454fa58ba83c4079ee02, type: 3}
   m_Name: ProjectData
   m_EditorClassIdentifier: 
-  sliderCount: 0
+  projectCallType: 1
+  sliderCount: 20
   sliderValue: 0
   screenSize: {x: 1920, y: 1080}
   windowRect:
@@ -24,4 +25,4 @@ MonoBehaviour:
   gap: 2
   percentY: 0.5625
   percentX: 1.7777778
-  activePanelIndex: 0
+  activePanelIndex: 3

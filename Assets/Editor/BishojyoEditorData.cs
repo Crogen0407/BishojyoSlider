@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "BishojyoSlider/ProjectData", fileName = "ProjectData")]
@@ -15,9 +16,12 @@ public class BishojyoEditorData : ScriptableObject
     public float percentX;
     public int activePanelIndex;
 
+    public List<List<BishojyoObject>> sceneInfomation;
+    
     [ContextMenu("Init")]
     public  void Init()
     {
+        sceneInfomation = new List<List<BishojyoObject>>();
         windowRect = new Rect(new Vector2(0, 0), screenSize);
         percentY = screenSize.y / screenSize.x;
         percentX = screenSize.x / screenSize.y;
