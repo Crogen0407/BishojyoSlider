@@ -10,7 +10,7 @@ namespace BishojyoSlider
         public TMP_FontAsset font;
         public bool bold;
         public Color color;
-        
+        public TextAlignmentOptions alignment;
         public string text;
     }
 }

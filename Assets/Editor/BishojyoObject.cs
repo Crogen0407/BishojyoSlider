@@ -8,7 +8,6 @@ namespace BishojyoSlider
     public class BishojyoObject : BishojyoTransform
     {
         public Texture2D image;
-        public bool active = true;
     }
 }
 
