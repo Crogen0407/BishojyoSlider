@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-namespace Editor
+namespace BishojyoSlider
 {
     public class BishojyoSliderPanel : EditorWindow
     {
@@ -31,7 +28,14 @@ namespace Editor
 
         public BishojyoObject currentSelectObject;
         private string callName;
-
+        
+        //Inspector Options
+        private bool showTransformOption = true;
+        private bool showTextureOption = true;
+        private bool showTextOption = true;
+        
+        
+        
         #region ShowPanel
 
             [MenuItem("BishojyoSlider/BishojyoSliderPanel")]
@@ -108,12 +112,41 @@ namespace Editor
                         if (BishojyoObjects != null && BishojyoObjects.Count != 0)
                         {
                             #region Inspector Option
-                    
-                                currentSelectObject.active = GUILayout.Toggle(currentSelectObject.active, "Active");
-                                currentSelectObject.type = EditorGUILayout.DelayedTextField(currentSelectObject.type);
-                                currentSelectObject.position = EditorGUILayout.Vector2Field("Position", currentSelectObject.position);
-                                currentSelectObject.scale = EditorGUILayout.Vector2Field("Scale", currentSelectObject.scale);
-                                currentSelectObject.image = EditorGUILayout.ObjectField(currentSelectObject.image, typeof(Texture2D)) as Texture2D;
+                            
+                                //Transform Option
+                                GUILayout.Space(10);
+                                currentSelectObject.active = GUILayout.Toggle(currentSelectObject.active, "");
+                                currentSelectObject.type = EditorGUI.DelayedTextField(new Rect(20, 7.5f, 200, 20), currentSelectObject.type);
+                                GUILayout.Space(10);
+                                showTransformOption = EditorGUILayout.BeginFoldoutHeaderGroup(showTransformOption, "Transform");
+                                if (showTransformOption)
+                                {
+                                    currentSelectObject.position = EditorGUILayout.Vector2Field("Position", currentSelectObject.position);
+                                    currentSelectObject.scale = EditorGUILayout.Vector2Field("Scale", currentSelectObject.scale);
+                                }
+                                EditorGUILayout.EndFoldoutHeaderGroup();
+                                
+                                //Texture Option
+                                showTextureOption = EditorGUILayout.BeginFoldoutHeaderGroup(showTextureOption, "Texture");
+                                if (showTextureOption)
+                                {
+                                    currentSelectObject.image = EditorGUILayout.ObjectField(currentSelectObject.image, typeof(Texture2D)) as Texture2D;
+                                }
+                                EditorGUILayout.EndFoldoutHeaderGroup();
+                                
+                                //Text Option
+                                showTextOption = EditorGUILayout.BeginFoldoutHeaderGroup(showTextOption, "Text");
+                                if (showTextOption)
+                                {
+                                    //Font
+                                    //FontStyle
+                                    //Size
+                                    //Color
+                                    //Align
+                                    //Text
+                                    // currentSelectObject.text = EditorGUILayout.TextArea(currentSelectObject.text);
+                                }
+                                EditorGUILayout.EndFoldoutHeaderGroup();
                     
                             #endregion
                     
@@ -123,13 +156,19 @@ namespace Editor
                                 int selectObjectIndex = BishojyoObjects.LastIndexOf(currentSelectObject);
                                 if(GUILayout.Button("Up"))
                                 {
-                                    BishojyoObjects[selectObjectIndex] = BishojyoObjects[selectObjectIndex - 1];
-                                    BishojyoObjects[selectObjectIndex - 1] = currentSelectObject;
+                                    if (selectObjectIndex - 1 >= 0)             
+                                    {
+                                        BishojyoObjects[selectObjectIndex] = BishojyoObjects[selectObjectIndex - 1];
+                                        BishojyoObjects[selectObjectIndex - 1] = currentSelectObject;
+                                    }
                                 }
                                 if (GUILayout.Button("Down"))
                                 {
-                                    BishojyoObjects[selectObjectIndex] = BishojyoObjects[selectObjectIndex + 1];
-                                    BishojyoObjects[selectObjectIndex + 1] = currentSelectObject;
+                                    if (selectObjectIndex + 1 < BishojyoObjects.Count - 1)
+                                    {
+                                        BishojyoObjects[selectObjectIndex] = BishojyoObjects[selectObjectIndex + 1];
+                                        BishojyoObjects[selectObjectIndex + 1] = currentSelectObject;
+                                    }
                                 }
                                 GUI.color = Color.yellow;
                                 if (GUILayout.Button("CreateChild"))
@@ -142,13 +181,16 @@ namespace Editor
                                 if (GUILayout.Button("Delete"))
                                 {
                                     BishojyoObjects.Remove(currentSelectObject);
-                                    if (selectObjectIndex == 0)
+                                    if (BishojyoObjects.Count != 0)
                                     {
-                                        currentSelectObject = BishojyoObjects[0];
-                                    }
-                                    else
-                                    {
-                                        currentSelectObject = BishojyoObjects[selectObjectIndex - 1];
+                                        if (selectObjectIndex == 0)
+                                        {
+                                            currentSelectObject = BishojyoObjects[0];
+                                        }
+                                        else
+                                        {
+                                            currentSelectObject = BishojyoObjects[selectObjectIndex -  1];
+                                        }
                                     }
                                 }
                                 GUI.color = Color.white;
@@ -222,7 +264,6 @@ namespace Editor
 
                     GUILayout.BeginArea(mainScreenRect, GUI.skin.window);
                     {
-                        #region MainScreen
                         _screenSize = new Vector2(widthSetting, widthSetting * _currentProjectData.percentY) * 1.5f * _mulSize;
                     
                         windowRect = new Rect(
@@ -240,9 +281,7 @@ namespace Editor
                                     BishojyoObject obj = BishojyoObjects[i];
                                     Vector2 scale = obj.scale * 250 * _mulSize;
                                     GUI.Button(new Rect((windowRect.size / 2 - new Vector2(-obj.position.x, obj.position.y) * _mulSize - scale / 2),scale), obj.image as Texture, GUI.skin.window);
-                                }
-                                if (_currentActivePanelIndex != _currentProjectData.activePanelIndex)
-                                {
+                                    // GUI.Box(new Rect((windowRect.size / 2 - new Vector2(-obj.position.x, obj.position.y) * _mulSize - scale / 2),scale),  BishojyoObjects[i].text, GUI.skin.box);
                                 }
                             }
                             
@@ -267,7 +306,6 @@ namespace Editor
                     
                         _mulSize = GUI.HorizontalSlider(new Rect(45, 2.5f, mainScreenRect.size.x * 0.3f, 10), _mulSize, 0.2f, 3);
                         _mulSize = Mathf.Clamp(_mulSize, 0.2f, 3);
-                        #endregion
                     }
                     GUILayout.EndArea();
 
@@ -277,8 +315,6 @@ namespace Editor
 
                     GUILayout.BeginArea(timelineRect, GUI.skin.window);
                     {
-                        #region UnderToolbar
-                    
                         Vector2 panelSize = new Vector2(timelineRect.size.y * _currentProjectData.percentX, timelineRect.size.y) * 0.7f;
                         timelineScrollVec = GUILayout.BeginScrollView(timelineScrollVec, false, false, GUILayout.Width(timelineRect.size.x));
                         {
@@ -294,8 +330,6 @@ namespace Editor
                             GUILayout.EndHorizontal();
                         }
                         GUILayout.EndScrollView();
-                    
-                        #endregion
                     }
                     GUILayout.EndArea();
 
@@ -304,7 +338,6 @@ namespace Editor
                 //창 초기화
                 Repaint();
             }
-           
         }
     }
 }
