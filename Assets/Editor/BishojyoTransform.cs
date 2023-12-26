@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace BishojyoSlider
 {
@@ -6,6 +7,7 @@ namespace BishojyoSlider
     {
         public string type;
         public bool active = true;
+        public List<BishojyoTransform> children;
         public Vector2 position;
         public Vector2 scale = Vector3.one;
     }

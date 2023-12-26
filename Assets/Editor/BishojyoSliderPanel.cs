@@ -34,6 +34,8 @@ namespace BishojyoSlider
         private bool showTextureOption = true;
         private bool showTextOption = true;
         
+        //Hierarchy Options
+        private BishojyoHierarchy _bishojyoHierarchy;
         
         
         #region ShowPanel
@@ -53,8 +55,15 @@ namespace BishojyoSlider
 
             private void OnEnable()
             {
+                //Hierarchy
+                _bishojyoHierarchy = new BishojyoHierarchy();
+                _bishojyoHierarchy.foldInformation = new List<bool>();
+                
+                //Transforms
                 bishojyoTransforms = new List<BishojyoTransform>();
                 bishojyoSubSelectedTransforms = new List<BishojyoTransform>();
+                
+                //MainScreen
                 _mulSize = 0.2f;
             }
 
@@ -236,8 +245,9 @@ namespace BishojyoSlider
                                 
                                 //다 아니면 그냥 보여주기
                                 else GUI.color = Color.white;
-                                
-                                if (GUILayout.Button(bishojyoTransforms[i].type))
+
+                                EditorGUILayout.BeginFoldoutHeaderGroup(bishojyoTransforms[i].type);
+                                if ()
                                 {
                                     Event e = Event.current;
                                     if (e.control)
