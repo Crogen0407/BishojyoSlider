@@ -6,8 +6,8 @@ using UnityEngine.Events;
 public class BishojyoObject
 {
     public string type;
-    public Vector3 position;
-    public Vector3 scale = Vector3.one;
+    public Vector2 position;
+    public Vector2 scale = Vector3.one;
     public Texture2D image;
     public bool active = true;
     public UnityEvent enableEvent;

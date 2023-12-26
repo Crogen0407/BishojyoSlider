@@ -111,8 +111,8 @@ namespace Editor
                     
                                 currentSelectObject.active = GUILayout.Toggle(currentSelectObject.active, "Active");
                                 currentSelectObject.type = EditorGUILayout.DelayedTextField(currentSelectObject.type);
-                                currentSelectObject.position = EditorGUILayout.Vector3Field("Position", currentSelectObject.position);
-                                currentSelectObject.scale = EditorGUILayout.Vector3Field("Scale", currentSelectObject.scale);
+                                currentSelectObject.position = EditorGUILayout.Vector2Field("Position", currentSelectObject.position);
+                                currentSelectObject.scale = EditorGUILayout.Vector2Field("Scale", currentSelectObject.scale);
                                 currentSelectObject.image = EditorGUILayout.ObjectField(currentSelectObject.image, typeof(Texture2D)) as Texture2D;
                     
                             #endregion
@@ -137,11 +137,19 @@ namespace Editor
                                     
                                 }
                                 GUILayout.Space(20);
+                                //오브젝트 삭제
                                 GUI.color = Color.red;
                                 if (GUILayout.Button("Delete"))
                                 {
                                     BishojyoObjects.Remove(currentSelectObject);
-                                    currentSelectObject = BishojyoObjects[selectObjectIndex - 1];
+                                    if (selectObjectIndex == 0)
+                                    {
+                                        currentSelectObject = BishojyoObjects[0];
+                                    }
+                                    else
+                                    {
+                                        currentSelectObject = BishojyoObjects[selectObjectIndex - 1];
+                                    }
                                 }
                                 GUI.color = Color.white;
                     
@@ -278,7 +286,7 @@ namespace Editor
                     
                             for (int i = 0; i < _currentProjectData.sliderCount; i++)
                             {
-                                if (GUILayout.Button(i.ToString(), GUILayout.Width(panelSize.x), GUILayout.Height(panelSize.y)))
+                                if (GUILayout.Button((i + 1).ToString(), GUILayout.Width(panelSize.x), GUILayout.Height(panelSize.y)))
                                 {
                                     _currentProjectData.activePanelIndex = i;
                                 }
