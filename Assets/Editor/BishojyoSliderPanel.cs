@@ -85,7 +85,10 @@ namespace Editor
                 {
                     GUILayout.BeginArea(new Rect(Vector2.zero, new Vector2(sideWindowSize.x, 25)), GUI.skin.box);
                     {
+                        GUILayout.BeginHorizontal();
                         GUI.TextField(new Rect(5, 0, 100, 20), "Hierarchy", GUI.skin.label);
+                        GUI.Button(new Rect(new Vector2(sideWindowSize.x - 50, 0), new Vector2(50, 20)), "Add");
+                        GUILayout.EndHorizontal();
                     }
                     GUILayout.EndArea();
                 }
