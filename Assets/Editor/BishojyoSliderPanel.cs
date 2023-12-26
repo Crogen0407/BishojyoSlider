@@ -13,7 +13,24 @@ namespace Editor
         private Rect windowRect;
         private Vector2 _screenSize = new Vector2(1920, 1080);
         private EditorWindow _window;
+        
+        float _sliderValue = 0;
+        private float _sliderCount = 10;
+        private float _mulSize = 0.2f;
+        private float _currentActivePanelIndex;
+        private Vector2 scrollPos = Vector2.zero;
+        private Vector2 _inspectorScrollVector;
+        private float _currentScrollViewHeight;
+        private bool resize = false;
+        Rect cursorChangeRect;
+        private Vector2 timelineScrollVec;
+
         public List<BishojyoObject> BishojyoObjects;
+        public List<BishojyoObject> BishojyoSubSelectedObjects;
+        private BishojyoEditorData _currentProjectData;
+
+        public BishojyoObject currentSelectObject;
+        private string callName;
 
         [MenuItem("BishojyoSlider/BishojyoSliderPanel")]
         private static void ShowWindow()
@@ -24,26 +41,11 @@ namespace Editor
             window.Show();
         }
         
-        float _sliderValue = 0;
-        private float _sliderCount = 10;
-        private float _mulSize = 0.7f;
-
-        private float _currentActivePanelIndex;
-        
-        private Vector2 scrollPos = Vector2.zero;
-        float currentScrollViewHeight;
-        bool resize = false;
-        Rect cursorChangeRect;
-        private Vector2 timelineScrollVec;
-
-        private BishojyoEditorData _currentProjectData;
-
-        public BishojyoObject currentSelectObject;
-        private string callName;
-
         private void OnEnable()
         {
             BishojyoObjects = new List<BishojyoObject>();
+            BishojyoSubSelectedObjects = new List<BishojyoObject>();
+            _mulSize = 0.2f;
         }
 
         private void OnGUI()
@@ -84,16 +86,51 @@ namespace Editor
                         GUI.TextField(new Rect(5, 0, 100, 20), "Inspector", GUI.skin.label);
                     }
                     GUILayout.EndArea();
+                    _inspectorScrollVector = GUILayout.BeginScrollView(_inspectorScrollVector, false, false);
                     //Object Setting Data
                     if (BishojyoObjects != null && BishojyoObjects.Count != 0)
                     {
-                        currentSelectObject.active = GUILayout.Toggle(currentSelectObject.active, "Active");
-                        currentSelectObject.type = EditorGUILayout.DelayedTextField(currentSelectObject.type);
-                        currentSelectObject.position = EditorGUILayout.Vector3Field("Position", currentSelectObject.position);
-                        currentSelectObject.rotation = EditorGUILayout.Vector3Field("Rotation", currentSelectObject.rotation);
-                        currentSelectObject.scale = EditorGUILayout.Vector3Field("Scale", currentSelectObject.scale);
-                        currentSelectObject.image = EditorGUILayout.ObjectField(currentSelectObject.image, typeof(Texture2D)) as Texture2D;
+                        #region Inspector Option
+
+                            currentSelectObject.active = GUILayout.Toggle(currentSelectObject.active, "Active");
+                            currentSelectObject.type = EditorGUILayout.DelayedTextField(currentSelectObject.type);
+                            currentSelectObject.position = EditorGUILayout.Vector3Field("Position", currentSelectObject.position);
+                            currentSelectObject.scale = EditorGUILayout.Vector3Field("Scale", currentSelectObject.scale);
+                            currentSelectObject.image = EditorGUILayout.ObjectField(currentSelectObject.image, typeof(Texture2D)) as Texture2D;
+
+                        #endregion
+
+                        #region MyRegion Hierarchy Control
+
+                            GUILayout.Space(20);
+                            int selectObjectIndex = BishojyoObjects.LastIndexOf(currentSelectObject);
+                            if(GUILayout.Button("Up"))
+                            {
+                                BishojyoObjects[selectObjectIndex] = BishojyoObjects[selectObjectIndex - 1];
+                                BishojyoObjects[selectObjectIndex - 1] = currentSelectObject;
+                            }
+                            if (GUILayout.Button("Down"))
+                            {
+                                BishojyoObjects[selectObjectIndex] = BishojyoObjects[selectObjectIndex + 1];
+                                BishojyoObjects[selectObjectIndex - 1] = currentSelectObject;
+                            }
+                            GUI.color = Color.yellow;
+                            if (GUILayout.Button("CreateChild"))
+                            {
+                                
+                            }
+                            GUILayout.Space(20);
+                            GUI.color = Color.red;
+                            if (GUILayout.Button("Delete"))
+                            {
+                                BishojyoObjects.Remove(currentSelectObject);
+                                currentSelectObject = BishojyoObjects[selectObjectIndex - 1];
+                            }
+                            GUI.color = Color.white;
+
+                        #endregion
                     }
+                    GUILayout.EndScrollView();
                 }     
                 GUILayout.EndArea();
                 GUILayout.BeginArea(new Rect(Vector2.right * (windowSize - sideWindowSize), new Vector2(sideWindowSize.x, mainScreenRect.size.y)), GUI.skin.window); //Hierarchy
@@ -119,24 +156,26 @@ namespace Editor
                     {
                         for (int i = 0; i < BishojyoObjects.Count; i++)
                         {
-                            //active 활성화 및 비활성화
-                            if (!BishojyoObjects[i].active)
-                            {
-                                GUI.color = Color.gray;
-                            }
-                            else
-                            {
-                                GUI.color = Color.white;
-                            }
+                            //active 활성화 및 비활성화(비활성화된 오브젝트는 다음 현재씬과 다음에 나오는 모든 씬에서 삭제가 됨)
+                            if (!BishojyoObjects[i].active) GUI.color = Color.gray;
+                            
+                            //현재 선택된 오브젝트를 시각적으로 보여주기
+                            else if (BishojyoObjects[i] == currentSelectObject) GUI.color = Color.green;
+                            
+                            //다 아니면 그냥 보여주기
+                            else GUI.color = Color.white;
+                            
                             if (GUILayout.Button(BishojyoObjects[i].type))
                             {
                                 Event e = Event.current;
                                 if (e.control)
                                 {
-                                    BishojyoObjects.Remove(BishojyoObjects[i]);
+                                    //부속으로 선택된 오브젝트
+                                    BishojyoSubSelectedObjects.Add(BishojyoObjects[i]);
                                 }
                                 else
                                 {
+                                    BishojyoSubSelectedObjects.Clear();
                                     currentSelectObject = BishojyoObjects[i];
                                 }
                             }
