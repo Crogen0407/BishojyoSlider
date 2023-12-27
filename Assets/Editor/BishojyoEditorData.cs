@@ -18,12 +18,12 @@ namespace BishojyoSlider
         public float percentX;
         public int activePanelIndex;
 
-        public List<List<BishojyoObject>> sceneInfomation;
+        public List<List<BishojyoTransform>> sceneInfomation;
     
         [ContextMenu("Init")]
-        public  void Init()
+        public void Init()
         {
-            sceneInfomation = new List<List<BishojyoObject>>();
+            sceneInfomation = new List<List<BishojyoTransform>>();
             windowRect = new Rect(new Vector2(0, 0), screenSize);
             percentY = screenSize.y / screenSize.x;
             percentX = screenSize.x / screenSize.y;

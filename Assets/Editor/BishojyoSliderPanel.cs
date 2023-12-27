@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace BishojyoSlider
 {
@@ -14,7 +15,7 @@ namespace BishojyoSlider
         float _sliderValue = 0;
         private float _sliderCount = 10;
         private float _mulSize = 0.2f;
-        private float _currentActivePanelIndex;
+        private int _currentActivePanelIndex;
         private Vector2 scrollPos = Vector2.zero;
         private Vector2 _inspectorScrollVector;
         private float _currentScrollViewHeight;
@@ -68,6 +69,21 @@ namespace BishojyoSlider
             }
 
         #endregion
+
+        private void LoadMainScreen()
+        {
+            //Hierarchy창에 있는 오브젝트 랜더링
+            if (bishojyoTransforms != null)
+            {
+                for (int i = bishojyoTransforms.Count - 1; i >= 0 ; i--) 
+                {
+                    BishojyoObject obj = bishojyoTransforms[i] as BishojyoObject;
+                    Vector2 scale = obj.scale * 250 * _mulSize;
+                    GUI.Button(new Rect((windowRect.size / 2 - new Vector2(-obj.position.x, obj.position.y) * _mulSize - scale / 2),scale), obj.image as Texture, GUI.skin.window);
+                    // GUI.Box(new Rect((windowRect.size / 2 - new Vector2(-obj.position.x, obj.position.y) * _mulSize - scale / 2),scale),  BishojyoObjects[i].text, GUI.skin.box);
+                }
+            }
+        }
         
         private void OnGUI()
         {
@@ -89,7 +105,7 @@ namespace BishojyoSlider
                 _currentActivePanelIndex = _currentProjectData.activePanelIndex;
                 Rect timelineRect = new Rect(new Vector2(0, windowSize.y * 0.7f),
                     new Vector2(windowSize.x, windowSize.y - windowSize.y * 0.7f));
-
+                
                 #region ProjectSetting
 
                     GUILayout.BeginArea(new Rect(Vector2.zero, new Vector2(sideWindowSize.x, mainScreenRect.size.y / 2)), GUI.skin.window);
@@ -124,8 +140,8 @@ namespace BishojyoSlider
                             
                                 //Transform Option
                                 GUILayout.Space(10);
+                                currentSelectTransform.type = EditorGUI.DelayedTextField(new Rect(20, 7.5f, 250, 20), currentSelectTransform.type);
                                 currentSelectTransform.active = GUILayout.Toggle(currentSelectTransform.active, "");
-                                currentSelectTransform.type = EditorGUI.DelayedTextField(new Rect(20, 7.5f, 200, 20), currentSelectTransform.type);
                                 GUILayout.Space(10);
                                 showTransformOption = EditorGUILayout.BeginFoldoutHeaderGroup(showTransformOption, "Transform");
                                 if (showTransformOption)
@@ -142,7 +158,6 @@ namespace BishojyoSlider
                                     (currentSelectTransform as BishojyoObject).image = EditorGUILayout.ObjectField((currentSelectTransform as BishojyoObject).image, typeof(Texture2D)) as Texture2D;
                                 }
                                 EditorGUILayout.EndFoldoutHeaderGroup();
-                                
                                 //Text Option
                                 showTextOption = EditorGUILayout.BeginFoldoutHeaderGroup(showTextOption, "Text");
                                 if (showTextOption)
@@ -227,8 +242,11 @@ namespace BishojyoSlider
                             {
                                 BishojyoObject obj = new BishojyoObject();
                                 bishojyoTransforms.Add(obj);
+                                //부모자식 관계를 표현하기 위한 리스트
+                                _bishojyoHierarchy.foldInformation.Add(false);
                                 obj.type = "New Object";
                                 currentSelectTransform = obj;
+                                _currentProjectData.sceneInfomation[_currentActivePanelIndex] = bishojyoTransforms;
                             }
                             GUILayout.EndHorizontal();
                         }
@@ -237,6 +255,7 @@ namespace BishojyoSlider
                         {
                             for (int i = 0; i < bishojyoTransforms.Count; i++)
                             {
+                                Event e = Event.current;
                                 //active 활성화 및 비활성화(비활성화된 오브젝트는 다음 현재씬과 다음에 나오는 모든 씬에서 삭제가 됨)
                                 if (!bishojyoTransforms[i].active) GUI.color = Color.gray;
                                 
@@ -245,11 +264,10 @@ namespace BishojyoSlider
                                 
                                 //다 아니면 그냥 보여주기
                                 else GUI.color = Color.white;
-
-                                EditorGUILayout.BeginFoldoutHeaderGroup(bishojyoTransforms[i].type);
-                                if ()
+                                
+                                _bishojyoHierarchy.foldInformation[i] = EditorGUILayout.BeginFoldoutHeaderGroup(_bishojyoHierarchy.foldInformation[i], bishojyoTransforms[i].type);
+                                if (_bishojyoHierarchy.foldInformation[i])
                                 {
-                                    Event e = Event.current;
                                     if (e.control)
                                     {
                                         //부속으로 선택된 오브젝트
@@ -257,11 +275,13 @@ namespace BishojyoSlider
                                     }
                                     else
                                     {
+                                        //현재 선택된 오브젝트
                                         bishojyoSubSelectedTransforms.Clear();
                                         currentSelectTransform = bishojyoTransforms[i];
                                     }
                                 }
                                 GUI.color = Color.white;
+                                EditorGUILayout.EndFoldoutHeaderGroup();        
                             }
                         }
                         
@@ -283,18 +303,8 @@ namespace BishojyoSlider
                             _screenSize);
                         GUILayout.BeginArea(windowRect, GUI.skin.window);
                         {
-                            //Hierarchy창에 있는 오브젝트 랜더링
-                            if (bishojyoTransforms != null)
-                            {
-                                for (int i = bishojyoTransforms.Count - 1; i >= 0 ; i--) 
-                                {
-                                    BishojyoObject obj = bishojyoTransforms[i] as BishojyoObject;
-                                    Vector2 scale = obj.scale * 250 * _mulSize;
-                                    GUI.Button(new Rect((windowRect.size / 2 - new Vector2(-obj.position.x, obj.position.y) * _mulSize - scale / 2),scale), obj.image as Texture, GUI.skin.window);
-                                    // GUI.Box(new Rect((windowRect.size / 2 - new Vector2(-obj.position.x, obj.position.y) * _mulSize - scale / 2),scale),  BishojyoObjects[i].text, GUI.skin.box);
-                                }
-                            }
-                            
+                            LoadMainScreen();
+
                             //GUILayout.TextArea(_currentData.activePanelIndex.ToString(), GUIStyle.none);
                         }
                         GUILayout.EndArea();
@@ -329,13 +339,31 @@ namespace BishojyoSlider
                         timelineScrollVec = GUILayout.BeginScrollView(timelineScrollVec, false, false, GUILayout.Width(timelineRect.size.x));
                         {
                             GUILayout.BeginHorizontal();
-                    
+
                             for (int i = 0; i < _currentProjectData.sliderCount; i++)
                             {
+                                if (_currentProjectData.sceneInfomation.Count <= _currentProjectData.sliderCount)
+                                {
+                                    _currentProjectData.sceneInfomation.Add(new List<BishojyoTransform>());
+                                }
+                                else
+                                {
+                                    _currentProjectData.sceneInfomation.RemoveAt(_currentProjectData.sceneInfomation.Count-1);
+                                }
+                            }
+                            
+                            for (int i = 0; i < _currentProjectData.sliderCount; i++)
+                            {
+                                
                                 if (GUILayout.Button((i + 1).ToString(), GUILayout.Width(panelSize.x), GUILayout.Height(panelSize.y)))
                                 {
                                     _currentProjectData.activePanelIndex = i;
+                                    if (_currentProjectData.sceneInfomation[i] != null)
+                                    {
+                                        bishojyoTransforms = _currentProjectData.sceneInfomation[i];
+                                    }
                                 }
+                               
                             }
                             GUILayout.EndHorizontal();
                         }

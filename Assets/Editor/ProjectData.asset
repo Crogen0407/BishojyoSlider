@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ProjectData
   m_EditorClassIdentifier: 
   projectCallType: 1
-  sliderCount: 100
+  sliderCount: 60
   sliderValue: 0
   screenSize: {x: 1920, y: 1080}
   windowRect:
@@ -25,4 +25,4 @@ MonoBehaviour:
   gap: 2
   percentY: 0.5625
   percentX: 1.7777778
-  activePanelIndex: 1
+  activePanelIndex: 2
