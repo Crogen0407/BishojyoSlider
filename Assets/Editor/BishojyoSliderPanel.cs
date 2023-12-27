@@ -246,7 +246,7 @@ namespace BishojyoSlider
                                 _bishojyoHierarchy.foldInformation.Add(false);
                                 obj.type = "New Object";
                                 currentSelectTransform = obj;
-                                _currentProjectData.sceneInfomation[_currentActivePanelIndex] = bishojyoTransforms;
+                                _currentProjectData.sceneInfomation[_currentActivePanelIndex].list = bishojyoTransforms;
                             }
                             GUILayout.EndHorizontal();
                         }
@@ -344,7 +344,7 @@ namespace BishojyoSlider
                             {
                                 if (_currentProjectData.sceneInfomation.Count <= _currentProjectData.sliderCount)
                                 {
-                                    _currentProjectData.sceneInfomation.Add(new List<BishojyoTransform>());
+                                    _currentProjectData.sceneInfomation.Add(new BishojyoSceneData());
                                 }
                                 else
                                 {
@@ -358,9 +358,9 @@ namespace BishojyoSlider
                                 if (GUILayout.Button((i + 1).ToString(), GUILayout.Width(panelSize.x), GUILayout.Height(panelSize.y)))
                                 {
                                     _currentProjectData.activePanelIndex = i;
-                                    if (_currentProjectData.sceneInfomation[i] != null)
+                                    if (_currentProjectData.sceneInfomation[i].list != null)
                                     {
-                                        bishojyoTransforms = _currentProjectData.sceneInfomation[i];
+                                        bishojyoTransforms = _currentProjectData.sceneInfomation[i].list;
                                     }
                                 }
                                

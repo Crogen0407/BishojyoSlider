@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,15 +19,21 @@ namespace BishojyoSlider
         public float percentX;
         public int activePanelIndex;
 
-        public List<List<BishojyoTransform>> sceneInfomation;
+        public List<BishojyoSceneData> sceneInfomation;
     
         [ContextMenu("Init")]
         public void Init()
         {
-            sceneInfomation = new List<List<BishojyoTransform>>();
+            sceneInfomation = new List<BishojyoSceneData>();
             windowRect = new Rect(new Vector2(0, 0), screenSize);
             percentY = screenSize.y / screenSize.x;
             percentX = screenSize.x / screenSize.y;
         }
+    }
+
+    [Serializable]
+    public struct BishojyoSceneData
+    {
+        public List<BishojyoTransform> list;
     }
 }

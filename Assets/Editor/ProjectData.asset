@@ -25,4 +25,5 @@ MonoBehaviour:
   gap: 2
   percentY: 0.5625
   percentX: 1.7777778
-  activePanelIndex: 2
+  activePanelIndex: 1
+  sceneInfomation: []
