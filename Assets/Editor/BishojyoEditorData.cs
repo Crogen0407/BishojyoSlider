@@ -32,7 +32,7 @@ namespace BishojyoSlider
     }
 
     [Serializable]
-    public struct BishojyoSceneData
+    public class BishojyoSceneData
     {
         public List<BishojyoTransform> list;
     }
