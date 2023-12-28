@@ -34,6 +34,6 @@ namespace BishojyoSlider
     [Serializable]
     public class BishojyoSceneData
     {
-        public List<BishojyoTransform> list;
+        public List<GameObject> list;
     }
 }
