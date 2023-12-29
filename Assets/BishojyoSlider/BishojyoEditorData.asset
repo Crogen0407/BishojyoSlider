@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8448704368d1454fa58ba83c4079ee02, type: 3}
   m_Name: BishojyoEditorData
   m_EditorClassIdentifier: 
-  projectCallType: 
-  sliderCount: 20
+  projectCallType: 20
+  sliderCount: 10
   screenSize: {x: 1920, y: 1080}
   windowRect:
     serializedVersion: 2
@@ -37,6 +37,7 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
+  - list:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
@@ -47,17 +48,6 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
   - list: []
   - list: []
   - list: []

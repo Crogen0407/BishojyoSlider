@@ -85,10 +85,23 @@ namespace BishojyoSlider
                         GUILayout.BeginArea(new Rect(Vector2.zero, new Vector2(sideWindowSize.x, 25)), GUI.skin.box);
                         {
                             GUI.TextField(new Rect(5, 0, 100, 20), "ProjectSetting", GUI.skin.label);
+                            GUILayout.Space(10);
                         }
                         GUILayout.EndArea();
                         //현재 작업중...
                         _currentProjectData.projectCallType = EditorGUILayout.DelayedTextField(_currentProjectData.projectCallType);
+                        GUILayout.Space(10);
+                        _currentProjectData.sliderCount = int.Parse(EditorGUILayout.DelayedTextField(_currentProjectData.sliderCount.ToString()));
+                        GUILayout.Space(20);
+                        GUI.color = Color.red;
+                        if (GUILayout.Button("SceneClear"))
+                        {
+                            for (int i = 0; i < _currentProjectData.sliderCount; i++)
+                            {
+                                _currentProjectData.sceneInfomation[i].list.Clear();
+                            }
+                        }
+                        GUI.color = Color.white;
                     }     
                     GUILayout.EndArea();
 
@@ -105,7 +118,17 @@ namespace BishojyoSlider
                         GUILayout.EndArea();
                         try
                         {
+                            _activeObjectCount = _currentProjectData.sceneInfomation[_currentActivePanelIndex].list.Count;
                             _activeObjectCount = int.Parse(EditorGUILayout.DelayedTextField(_activeObjectCount.ToString()));
+                            while (_currentProjectData.sceneInfomation[_currentActivePanelIndex].list.Count < _activeObjectCount)
+                            {
+                                _currentProjectData.sceneInfomation[_currentActivePanelIndex].list.Add(null);
+                            }
+                            while (_currentProjectData.sceneInfomation[_currentActivePanelIndex].list.Count > _activeObjectCount)
+                            {
+                                _currentProjectData.sceneInfomation[_currentActivePanelIndex].list.RemoveAt(_currentProjectData.sceneInfomation[_currentActivePanelIndex].list.Count - 1);
+                            }
+                            
                             for (int i = 0; i < _activeObjectCount; i++)
                             {
                                 _currentProjectData.sceneInfomation[_currentActivePanelIndex].list[i] = EditorGUILayout.ObjectField(_currentProjectData.sceneInfomation[_currentActivePanelIndex].list[i], typeof(GameObject), true) as GameObject;
