@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8448704368d1454fa58ba83c4079ee02, type: 3}
-  m_Name: ProjectData
+  m_Name: BishojyoEditorData
   m_EditorClassIdentifier: 
-  projectCallType: 1
-  sliderCount: 60
-  sliderValue: 0
+  projectCallType: 
+  sliderCount: 20
   screenSize: {x: 1920, y: 1080}
   windowRect:
     serializedVersion: 2
@@ -25,19 +24,29 @@ MonoBehaviour:
   gap: 2
   percentY: 0.5625
   percentX: 1.7777778
-  activePanelIndex: 2
+  activePanelIndex: 0
   sceneInfomation:
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
-  - list: []
+  - list:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   - list: []
   - list: []
   - list: []

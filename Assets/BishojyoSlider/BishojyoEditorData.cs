@@ -5,18 +5,17 @@ using UnityEngine;
 
 namespace BishojyoSlider
 {
-    [CreateAssetMenu(menuName = "BishojyoSlider/ProjectData", fileName = "ProjectData")]
+    [CreateAssetMenu(fileName = "BishojyoEditorData", menuName = "BishojyoSlider/BishojyoEditorData")]
     public class BishojyoEditorData : ScriptableObject
     {
         public string projectCallType;
         public int sliderCount;
-        public float sliderValue;
         public Vector2 screenSize = new Vector2(1920, 1080);
         public Rect windowRect; 
     
         public float gap = 2;
         public float percentY;
-        public float percentX;
+        public float percentX;  
         public int activePanelIndex;
 
         public List<BishojyoSceneData> sceneInfomation;

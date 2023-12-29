@@ -14,7 +14,6 @@ namespace BishojyoSlider
         private EditorWindow _window;
         
         float _sliderValue = 0;
-        private float _sliderCount = 10;
         private int _currentActivePanelIndex;
         private Vector2 _inspectorScrollVector;
         private float _currentScrollViewHeight;
@@ -29,7 +28,8 @@ namespace BishojyoSlider
         private string callName;
         
         //ProjectSetting
-        
+        public int _activeObjectCount;
+
         //SceneSetting
         
         #region ShowPanel
@@ -55,8 +55,8 @@ namespace BishojyoSlider
             }
 
         #endregion
-        [FormerlySerializedAs("activeObjectCount")] public int _activeObjectCount;
 
+        private GameObject objectKK;
         private void OnGUI()
         {
             //선택된 에디터 객체
@@ -89,7 +89,6 @@ namespace BishojyoSlider
                         GUILayout.EndArea();
                         //현재 작업중...
                         _currentProjectData.projectCallType = EditorGUILayout.DelayedTextField(_currentProjectData.projectCallType);
-                    
                     }     
                     GUILayout.EndArea();
 
@@ -107,18 +106,17 @@ namespace BishojyoSlider
                         try
                         {
                             _activeObjectCount = int.Parse(EditorGUILayout.DelayedTextField(_activeObjectCount.ToString()));
-                            _currentProjectData.sceneInfomation[_currentActivePanelIndex].list = new List<GameObject>(_activeObjectCount);
+                            for (int i = 0; i < _activeObjectCount; i++)
+                            {
+                                _currentProjectData.sceneInfomation[_currentActivePanelIndex].list[i] = EditorGUILayout.ObjectField(_currentProjectData.sceneInfomation[_currentActivePanelIndex].list[i], typeof(GameObject), true) as GameObject;
+                            }
                         }
                         catch
                         {
                             
                         }
 
-                        for (int i = 0; i <  _currentProjectData.sceneInfomation[_currentActivePanelIndex].list.Count; i++)
-                        {
-                            _currentProjectData.sceneInfomation[_currentActivePanelIndex].list[i] = EditorGUILayout.ObjectField(_currentProjectData.sceneInfomation[_currentActivePanelIndex].list[i], typeof(GameObject), true) as GameObject;
-
-                        }
+                        
                     }     
                     GUILayout.EndArea();
 
